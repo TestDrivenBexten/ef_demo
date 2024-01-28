@@ -4,15 +4,15 @@ namespace EfDemo
 {
     public class DemoContext : DbContext
     {
-        public DbSet<Account> Accounts;
-        public DbSet<Share> Shares;
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Share> Shares { get; set; }
         public string DbPath { get; }
 
         public DemoContext()
         {
             var folder = Environment.SpecialFolder.LocalApplicationData;
             var path = Environment.GetFolderPath(folder);
-            DbPath = Path.Join(path, "blogging.db");
+            DbPath = Path.Join(path, "accounts.db");
         }
 
         // The following configures EF to create a Sqlite database file in the
