@@ -6,6 +6,7 @@ const decimal MINIMUM_BALANCE = 10.00M;
 
 void ClearDatabase() {
     Console.WriteLine("Clearing database...");
+    db.ShareTransactions.RemoveRange(db.ShareTransactions.ToList());
     db.Shares.RemoveRange(db.Shares.ToList());
     db.Accounts.RemoveRange(db.Accounts.ToList());
     db.SaveChanges();
@@ -47,5 +48,6 @@ var share = db.Shares.First();
 Console.WriteLine($"Adding transactions to share {share.ShareId} with balance {share.ShareAmount}");
 AddTransactionsToShare(share, 15.00M, 25.00M, -45.00M);
 db.SaveChanges();
+Console.WriteLine($"Share {share.ShareId} balance now at {share.ShareAmount}");
 
 // ClearDatabase();

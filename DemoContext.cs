@@ -6,6 +6,7 @@ namespace EfDemo
     {
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Share> Shares { get; set; }
+        public DbSet<ShareTransaction> ShareTransactions { get; set; }
         public string DbPath { get; }
 
         public DemoContext()
