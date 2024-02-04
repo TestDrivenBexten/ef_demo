@@ -83,14 +83,14 @@ db.Accounts.Add(secondAccount);
 db.SaveChanges();
 
 /*
- * Get Share Ids for shares below minimum balance
+ * List shares below minimum balance
  */
 var shareSummaryList = QueryBelowMinimumBalanceShares();
 Console.WriteLine($"There are {shareSummaryList.Count()} shares below the minimum balance of {MINIMUM_BALANCE}");
 foreach (var shareSummary in shareSummaryList)
 {
     var (accountNumber, ownerName, shareId, balance) = shareSummary;
-    Console.WriteLine($"  Account {accountNumber} for {ownerName}, share {shareSummary} with balance {balance}");
+    Console.WriteLine($"  Account {accountNumber} for {ownerName}, share {shareId} with balance {balance}");
 }
 
 // ClearDatabase();
