@@ -10,11 +10,17 @@ void ClearDatabase() {
     db.SaveChanges();
     Console.WriteLine("Database cleared...");
 }
-ClearDatabase();
 
-var account = new Account { AccountNumber = "X1000", OwnerName="Jack Daniels" };
-var share = new Share { ShareAmount = 10.00M };
-account.Shares.Add(share);
+Account CreateMinimumDepositAccount(string ownerName, string accountNumber)
+{
+    var account = new Account { AccountNumber = accountNumber, OwnerName = ownerName };
+    var share = new Share { ShareAmount = 10.00M };
+    account.Shares.Add(share);
+    return account;
+}
+
+ClearDatabase();
+var account = CreateMinimumDepositAccount("Jack Daniels", "X1000");
 db.Accounts.Add(account);
 db.SaveChanges();
 
