@@ -17,7 +17,7 @@ void ClearDatabase() {
 Account CreateMinimumDepositAccount(string ownerName, string accountNumber)
 {
     var account = new Account { AccountNumber = accountNumber, OwnerName = ownerName };
-    var share = new Share { ShareAmount = MINIMUM_BALANCE };
+    var share = new Share { Balance = MINIMUM_BALANCE };
     account.Shares.Add(share);
     return account;
 }
@@ -25,7 +25,7 @@ Account CreateMinimumDepositAccount(string ownerName, string accountNumber)
 IList<ShareSummary> QueryBelowMinimumBalanceShares()
 {
     var summaryList = db.Shares
-        .Where(x => x.ShareAmount < MINIMUM_BALANCE)
+        .Where(x => x.Balance < MINIMUM_BALANCE)
         .Join(
             db.Accounts, // Table to join
             share => share.Account.AccountId, // Key for left hand table
@@ -34,7 +34,7 @@ IList<ShareSummary> QueryBelowMinimumBalanceShares()
                 account.AccountNumber,
                 account.OwnerName,
                 share.ShareId,
-                share.ShareAmount
+                share.Balance
             )
         )
         // .Where(x => x.Balance < MINIMUM_BALANCE)
@@ -46,7 +46,7 @@ void AddTransactionsToShare(Share share, params decimal[] amountList)
 {
     var transactionList = amountList.Select(x => new ShareTransaction { BalanceChange = x }).ToList();
     var totalChange = transactionList.Sum(x => x.BalanceChange);
-    share.ShareAmount += totalChange;
+    share.Balance += totalChange;
     foreach(var transaction in transactionList)
     {
         share.ShareTransactions.Add(transaction);
@@ -66,17 +66,17 @@ Console.WriteLine("Account saved");
  * Add transactions to shares
  */
 var share = db.Shares.First();
-Console.WriteLine($"Adding transactions to share {share.ShareId} with balance {share.ShareAmount}");
+Console.WriteLine($"Adding transactions to share {share.ShareId} with balance {share.Balance}");
 AddTransactionsToShare(share, 15.00M, 25.00M, -45.00M);
 db.SaveChanges();
-Console.WriteLine($"Share {share.ShareId} balance now at {share.ShareAmount}");
+Console.WriteLine($"Share {share.ShareId} balance now at {share.Balance}");
 
 /*
  * Add another account with various shares
  */
 var secondAccount = CreateMinimumDepositAccount("Ferret Faucet", "X1001"); // Charlie's Angels
-var belowMinimumShare = new Share { ShareAmount = 5.00M };
-var aboveMinimumShare = new Share { ShareAmount = 1_102_030.00M };
+var belowMinimumShare = new Share { Balance = 5.00M };
+var aboveMinimumShare = new Share { Balance = 1_102_030.00M };
 secondAccount.Shares.Add(belowMinimumShare);
 secondAccount.Shares.Add(aboveMinimumShare);
 db.Accounts.Add(secondAccount);

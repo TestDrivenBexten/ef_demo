@@ -6,7 +6,7 @@ namespace EfDemo.Entities
     {
         [Key]
         public int ShareId { get; set; }
-        public decimal ShareAmount { get; set; }
+        public decimal Balance { get; set; }
         public Account Account { get; set; } // Parent account
         public ICollection<ShareTransaction> ShareTransactions { get; set; } = new List<ShareTransaction>();
     }
