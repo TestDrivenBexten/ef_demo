@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace EfDemo
+namespace EfDemo.Entities
 {
     public class DemoContext : DbContext
     {

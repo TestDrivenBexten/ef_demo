@@ -1,5 +1,6 @@
 ﻿
 using EfDemo;
+using EfDemo.Entities;
 
 using var db = new DemoContext();
 const decimal MINIMUM_BALANCE = 10.00M;
