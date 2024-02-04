@@ -21,6 +21,26 @@ Account CreateMinimumDepositAccount(string ownerName, string accountNumber)
     return account;
 }
 
+IList<ShareSummary> QueryBelowMinimumBalanceShares()
+{
+    var summaryList = db.Shares
+        .Where(x => x.ShareAmount < MINIMUM_BALANCE)
+        .Join(
+            db.Accounts, // Table to join
+            share => share.Account.AccountId, // Key for left hand table
+            account => account.AccountId, // Key for right hand table
+            (share, account) => new ShareSummary(
+                account.AccountNumber,
+                account.OwnerName,
+                share.ShareId,
+                share.ShareAmount
+            )
+        )
+        // .Where(x => x.Balance < MINIMUM_BALANCE)
+        .ToList();
+    return summaryList;
+}
+
 void AddTransactionsToShare(Share share, params decimal[] amountList)
 {
     var transactionList = amountList.Select(x => new ShareTransaction { BalanceChange = x }).ToList();
@@ -64,14 +84,19 @@ db.SaveChanges();
 /*
  * Get Share Ids for shares below minimum balance
  */
-var belowBalanceShareIds = db.Shares
-    .Where(x => x.ShareAmount < MINIMUM_BALANCE)
-    .Select(x => x.ShareId)
-    .ToList();
-Console.WriteLine($"There are {belowBalanceShareIds.Count()} shares below the minimum balance of {MINIMUM_BALANCE}");
-foreach (var shareId in belowBalanceShareIds)
+var shareSummaryList = QueryBelowMinimumBalanceShares();
+Console.WriteLine($"There are {shareSummaryList.Count()} shares below the minimum balance of {MINIMUM_BALANCE}");
+foreach (var shareSummary in shareSummaryList)
 {
-    Console.WriteLine($"  Share {shareId}");
+    var (accountNumber, ownerName, shareId, balance) = shareSummary;
+    Console.WriteLine($"  Account {accountNumber} for {ownerName}, share {shareSummary} with balance {balance}");
 }
 
 // ClearDatabase();
+
+record ShareSummary(
+    string AccountNumber,
+    string OwnerName,
+    int ShareId,
+    decimal Balance
+);
